@@ -20,7 +20,7 @@ var Engine = (function(global) {
      */
 
     /* some global variable for logging game state */
-    let timer = '';
+    let timer = 0;
     let gameEnded = false;
 
     var doc = global.document,
@@ -46,7 +46,7 @@ var Engine = (function(global) {
         newDiv.appendChild(newHeaderElement);
 
         let newInstructionsElement = document.createElement("p");
-        let newInstructionsContent = document.createTextNode("Welcome! Get past the bugs to get points. Watch out for extra lives and gems. Each gem gives you 10 points and you can carry up to 10 lives. Reach 50 points to win. You lose if you lose all your lives");
+        let newInstructionsContent = document.createTextNode("Welcome! Get past the bugs to the river to score points. Watch out for extra lives and gems. Each gem gives you 10 points and you can carry up to 10 lives. Reach 50 points to win. You lose if you lose all your lives");
         newInstructionsElement.setAttribute("class","instructions");
         newInstructionsElement.appendChild(newInstructionsContent);
         newDiv.appendChild(newInstructionsElement);
@@ -55,7 +55,7 @@ var Engine = (function(global) {
         let newScoreContent = document.createTextNode("Score:");
         newScoreElement.setAttribute("class","score");
         newScoreElement.appendChild(newScoreContent);
-        newDiv.appendChild(newScoreElement)
+        newDiv.appendChild(newScoreElement);
 
         let newLivesElement = document.createElement("p");
         let newLivesContent = document.createTextNode("Number of lives: 5");
@@ -220,7 +220,7 @@ var Engine = (function(global) {
             heart.render();
         }
         if (player.score > 10 && isPrime(player.score)) {
-            gem.render(); // Idea is that gems only appear when the player's score is a prime number to give an appearance of randomness?
+            gem.render();
         }
     }
 
@@ -314,6 +314,7 @@ var Engine = (function(global) {
         clearInterval(timer);
     }
 
+    // Function to check if a number is a prime number--- Using this function to generate gems only when player score is a prime number, to create an illusion of randomness
     function isPrime(n) {
         for(let q=2;q<n;q++) {
             if(n % q === 0) {

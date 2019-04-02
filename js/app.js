@@ -1,6 +1,6 @@
 // Enemies our player must avoid
 let Enemy = function (x, y, s) {
-    // letiables applied to each of our instances go here,
+    // variables applied to each of our instances go here,
     // we've provided one for you to get started
 
     // The image/sprite for our enemies, this uses
@@ -32,16 +32,15 @@ Enemy.prototype.render = function () {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-
 let Player = function (x, y) {
     this.sprite = 'images/char-boy.png'; /// we can write a function that allows players to select a sprite later
     this.x = x;
     this.y = y;
     this.score = 0;
     this.lives = 5;
-    this.gems = 0
+    this.gems = 0;
     this.spriteIndex = 0;
-}
+};
 
 Player.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -91,43 +90,7 @@ Player.prototype.handleInput = function (keyCode) {
     }
 };
 
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a letiable called player
-let player = new Player(202, 404);
-
-let xPosEnemies = [0, 0, 0];
-let yPosEnemies = [72, 155, 238];
-let allEnemies = [];
-
-for (let i = 0; i < 3; i++) {
-    const speed = Math.floor(Math.random()) + 5;
-    allEnemies[i] = new Enemy(xPosEnemies[i], yPosEnemies[i], (Math.floor(Math.random() * 150) + 5));
-}
-
-// In order to disable key input after the final modal is flashed.
-document.addEventListener('keyup', playerMovementCallback);
-
-function playerMovementCallback(e) {
-    let allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down'
-    };
-    player.handleInput(allowedKeys[e.keyCode]);
-}
-
-// modified version for toggling characters
-document.addEventListener('keyup', function (e) {
-    let allowedKeys = {
-        32: 'space'
-    };
-
-    player.select(allowedKeys[e.keyCode]);
-});
-
-// creating a constructor for hearts
+// Adding a heart class for the extra lives object
 let Heart = function (x, y) {
     this.x = x;
     this.y = y;
@@ -144,22 +107,7 @@ Heart.prototype.update = function () {
     this.y = updatedPositions[1];
 };
 
-let heartStartingPosition = generateRandomPosition();
-let heart = new Heart(heartStartingPosition[0], heartStartingPosition[1]);
-
-function generateRandomPosition() {
-    const gridPosX = [0, 101, 202, 303, 404];
-    const gridPosY = [72, 155, 238, 321, 404];
-    let xHeart = gridPosX[Math.floor(Math.random() * gridPosX.length)];
-    let yHeart = gridPosY[Math.floor(Math.random() * gridPosY.length)];
-    while (xHeart === 404 && yHeart === 321) {
-        let updatedAgain = generateRandomPosition();
-        xHeart = updatedAgain[0];
-        yHeart = updatedAgain[1];
-    }
-    return [xHeart, yHeart];
-}
-
+// Adding a Gem class for the gem objects
 let Gem = function (x, y, sprite) {
     this.sprite = sprite;
     this.x = x;
@@ -178,6 +126,65 @@ Gem.prototype.update = function () {
     this.sprite = updatedGem;
 };
 
+// Now instantiate your objects.
+// Place all enemy objects in an array called allEnemies
+// Place the player object in a variable called player
+let player = new Player(202, 404);
+
+// Instantiating the enemy objects
+let xPosEnemies = [0, 0, 0];
+let yPosEnemies = [72, 155, 238];
+let allEnemies = [];
+for (let i = 0; i < 3; i++) {
+    const speed = Math.floor(Math.random()) + 5;
+    allEnemies[i] = new Enemy(xPosEnemies[i], yPosEnemies[i], (Math.floor(Math.random() * 150) + 5));
+}
+
+// Instantiating the Heart object
+let heartStartingPosition = generateRandomPosition();
+let heart = new Heart(heartStartingPosition[0], heartStartingPosition[1]);
+
+// Instantiating the Gem object
+let gemStartingSprite = generateRandomGem();
+let gemStartingPosition = generateRandomPosition();
+let gem = new Gem(gemStartingPosition[0], gemStartingPosition[1], gemStartingSprite);
+
+// Adding event listeners in order to make the player object moveable
+document.addEventListener('keyup', playerMovementCallback);
+
+function playerMovementCallback(e) {
+    let allowedKeys = {
+        37: 'left',
+        38: 'up',
+        39: 'right',
+        40: 'down'
+    };
+    player.handleInput(allowedKeys[e.keyCode]);
+}
+
+// Adding an event listener for toggling the playable characters using Space bar
+document.addEventListener('keyup', function (e) {
+    let allowedKeys = {
+        32: 'space'
+    };
+    player.select(allowedKeys[e.keyCode]);
+});
+
+// Adding functions to generate random positions for the Gem objects and Heart objects and random sprites for the gems
+// i.e. gems of different colors.
+function generateRandomPosition() {
+    const gridPosX = [0, 101, 202, 303, 404];
+    const gridPosY = [72, 155, 238, 321, 404];
+    let xHeart = gridPosX[Math.floor(Math.random() * gridPosX.length)];
+    let yHeart = gridPosY[Math.floor(Math.random() * gridPosY.length)];
+    while (xHeart === 404 && yHeart === 321) {
+        let updatedAgain = generateRandomPosition();
+        xHeart = updatedAgain[0];
+        yHeart = updatedAgain[1];
+    }
+    return [xHeart, yHeart];
+}
+
 function generateRandomGem() {
     const gems = [
         'images/Gem Blue.png',
@@ -186,8 +193,3 @@ function generateRandomGem() {
     ];
     return gems[Math.floor(Math.random() * gems.length)];
 }
-
-let gemStartingSprite = generateRandomGem();
-let gemStartingPosition = generateRandomPosition();
-
-let gem = new Gem(gemStartingPosition[0], gemStartingPosition[1], gemStartingSprite);
